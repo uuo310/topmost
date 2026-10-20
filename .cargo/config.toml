@@ -1,0 +1,4 @@
+# 静态链接 CRT：exe 不依赖 VCRUNTIME140.dll（VC++ 运行库），
+# 在没有装过 VC++ 2015-2022 Redistributable 的机器上也能直接跑。
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]

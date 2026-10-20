@@ -1,6 +1,6 @@
 [package]
 name = "topmost"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 description = "Windows 窗口置顶小工具：Ctrl+Alt+T 置顶当前窗口，标题栏出现图钉，点图钉取消"
 license = "MIT"

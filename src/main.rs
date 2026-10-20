@@ -1,6 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-// topmost（Rust 版）——Ctrl+Alt+T 置顶当前窗口，标题栏出现图钉，点图钉取消。
+// topmost（Rust 版）——Ctrl+Shift+A 置顶当前窗口，标题栏出现图钉，点图钉取消。
 // 纯 Win32：热键、分层窗口、DWM 定位、自绘图标，无第三方 UI 依赖。
 
 mod autorun;
@@ -21,7 +21,7 @@ use windows::Win32::UI::HiDpi::{
 };
 use windows::Win32::UI::Accessibility::{HWINEVENTHOOK, SetWinEventHook, UnhookWinEvent};
 use windows::Win32::UI::Input::KeyboardAndMouse::{
-    RegisterHotKey, TrackMouseEvent, UnregisterHotKey, MOD_ALT, MOD_CONTROL, TME_LEAVE,
+    RegisterHotKey, TrackMouseEvent, UnregisterHotKey, MOD_CONTROL, MOD_SHIFT, TME_LEAVE,
     TRACKMOUSEEVENT,
 };
 use windows::Win32::UI::WindowsAndMessaging::*;
@@ -29,10 +29,13 @@ use windows::Win32::UI::WindowsAndMessaging::*;
 const MAIN_CLASS: windows::core::PCWSTR = w!("TopMostRustMain");
 const HOTKEY_ID: i32 = 0xA17;
 const TIMER_ID: usize = 1;
-// 热键 Ctrl+Alt+T。不用 Win+Ctrl+T —— 那是 PowerToys「始终置顶」的默认键；
-// Win+Shift+字母 里 A C M P R S T V W 被系统占着，Win+Alt+字母 被 Xbox Game Bar 占着。
-// Ctrl+Alt+字母 实测整片空闲。
-const VK_T: u32 = 0x54;
+// 热键 Ctrl+Shift+A。一路换过来的原因：
+// Win+Ctrl+T —— PowerToys「始终置顶」的默认键，必然撞车；
+// Win+Shift+字母 里 A C M P R S T V W 被系统占着，Win+Alt+字母 被 Xbox Game Bar 占着；
+// Ctrl+Alt+字母 扫起来虽然全空，但 Ctrl+Alt 是太多老软件/显卡面板的传统热键区，实测照样被抢。
+// Ctrl+Shift+字母 用 RegisterHotKey 扫一遍也是整片空闲，且这类组合用的人少。
+// 要是哪天又被输入法吃掉：把这里换成别的键。Ctrl+Shift 是中文输入法传统占用的区域。
+const VK_A: u32 = 0x41;
 
 struct PinState {
     hwnd: HWND,
@@ -410,10 +413,10 @@ fn main() {
             Err(_) => return,
         };
 
-        if RegisterHotKey(Some(hwnd), HOTKEY_ID, MOD_CONTROL | MOD_ALT, VK_T).is_err() {
+        if RegisterHotKey(Some(hwnd), HOTKEY_ID, MOD_CONTROL | MOD_SHIFT, VK_A).is_err() {
             MessageBoxW(
                 Some(hwnd),
-                w!("Ctrl+Alt+T 已被别的程序占用，置顶工具无法启动。\n关掉占用它的程序后再试，或改源码里的热键常量重编。"),
+                w!("Ctrl+Shift+A 已被别的程序占用，置顶工具无法启动。\n关掉占用它的程序后再试，或改源码里的热键常量重编。"),
                 w!("置顶工具"),
                 MB_OK | MB_ICONERROR,
             );

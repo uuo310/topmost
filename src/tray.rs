@@ -15,7 +15,7 @@ const ID_EXIT: usize = 2;
 pub const ID_AUTO: usize = ID_AUTORUN;
 pub const ID_QUIT: usize = ID_EXIT;
 
-const TIP: &str = "置顶工具：Ctrl+Alt+T 置顶 / 点标题栏图钉取消";
+const TIP: &str = "置顶工具：Ctrl+Shift+A 置顶 / 点标题栏图钉取消";
 
 pub struct Tray {
     nid: NOTIFYICONDATAW,

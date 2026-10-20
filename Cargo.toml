@@ -1,0 +1,31 @@
+[package]
+name = "topmost"
+version = "1.0.0"
+edition = "2021"
+description = "Windows 窗口置顶小工具：Ctrl+Alt+T 置顶当前窗口，标题栏出现图钉，点图钉取消"
+license = "MIT"
+repository = "https://github.com/uuo310/topmost"
+build = "build.rs"
+
+[dependencies]
+windows = { version = "0.62.2", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_HiDpi",
+    "Win32_UI_Shell",
+    "Win32_UI_Accessibility",
+    "Win32_Security",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_Graphics_Gdi",
+    "Win32_Graphics_Dwm",
+    "Win32_System_Registry",
+    "Win32_System_Threading",
+    "Win32_System_LibraryLoader",
+] }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

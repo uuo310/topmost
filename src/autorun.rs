@@ -1,4 +1,4 @@
-// 开机自启：写 HKCU 的 Run 键，值和 C# 版一致（带引号的 exe 全路径）。
+// 开机自启：写 HKCU 的 Run 键，值是带引号的 exe 全路径（路径里有空格时不带引号会起不来）。
 use windows::core::PCWSTR;
 use windows::Win32::System::Registry::{
     RegCloseKey, RegDeleteValueW, RegOpenKeyExW, RegQueryValueExW, RegSetValueExW, HKEY,
